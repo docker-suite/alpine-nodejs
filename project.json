@@ -1,0 +1,30 @@
+{
+  "name": "craftdock/alpine-nodejs",
+  "default": "latest",
+  "versions": [
+    {
+      "version": "current",
+      "dockerfile": "9/Dockerfile",
+      "context": "9/.",
+      "data": "9.9.0"
+    },
+    {
+      "version": "lts",
+      "dockerfile": "8/Dockerfile",
+      "context": "8/.",
+      "data": "8.10.0"
+    },
+    {
+      "version": "9",
+      "dockerfile": "9/Dockerfile",
+      "context": "9/.",
+      "data": "9.9.0"
+    },
+    {
+      "version": "8",
+      "dockerfile": "8/Dockerfile",
+      "context": "8/.",
+      "data": "8.10.0"
+    }
+  ]
+}
