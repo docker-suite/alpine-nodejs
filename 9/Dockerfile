@@ -1,8 +1,5 @@
 FROM craftdock/alpine-runit:latest
 
-ENV NODE_VERSION 9.5.0
-ENV YARN_VERSION 1.3.2
-
 # Create node user
 RUN set -x && addgroup -g 1000 -S node && adduser -u 1000 -S -D -G node node
 
