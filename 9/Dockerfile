@@ -1,7 +1,23 @@
+# NodeJs apk builder
+FROM craftdock/apk-nodejs:9 as nodejs_apk_builder
+
+ENV PACKAGER "Hexosse <hexosse@gmail.com>"
+
+RUN set -x \
+    # Build Hugo apk file
+    && /entrypoint abuild -r -P /packages \
+    # Copy packages outside of builder volume
+    && sudo cp -r /packages /tmp/nodejs
+    
+
+
+# NodeJs    
 FROM craftdock/alpine-runit:latest
 
-# Create node user
-RUN set -x && addgroup -g 1000 -S node && adduser -u 1000 -S -D -G node node
+LABEL maintainer="Hexosse <hexosse@gmail.com>" \
+      description="Minimal Alpine image with NodeJs and Yarn."
+
+COPY --from=nodejs_apk_builder /tmp/nodejs /tmp/nodejs
 
 # Install node
 RUN \
@@ -9,69 +25,14 @@ RUN \
 	set -x \
     # Update repository indexes
     && apk-update \
-    # Add packages
-    && apk-install --repository http://dl-cdn.alpinelinux.org/alpine/edge/community/ \
-        libstdc++ \
-    # Add temporary packages
-    && apk-install --repository http://dl-cdn.alpinelinux.org/alpine/edge/community/ --virtual .build-dependencies \
-        binutils-gold \
-        curl \
-        g++ \
-        gcc \
-        gnupg \
-        libgcc \
-        linux-headers \
-        make \
-        python \
-    # Download and install
-    && curl -sfSLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION.tar.xz" \
-    && tar -xf "node-v$NODE_VERSION.tar.xz" \
-    && cd "node-v$NODE_VERSION" \
-    && ./configure --prefix=/usr \
-    && make -j$(getconf _NPROCESSORS_ONLN) \
-    && make install \
-    && cd .. \
-    # Remove files
-    && rm -Rf "node-v$NODE_VERSION" \
-    && rm "node-v$NODE_VERSION.tar.xz" \
+    # NodeJs need libuv >= 1.18.0
+    && apk-install --repository http://dl-cdn.alpinelinux.org/alpine/edge/main/ libuv \
+    # Install NodeJs
+    && apk-install --repository /tmp/nodejs --allow-untrusted nodejs nodejs-npm \
+    # Install Yarn
+    && apk-install --repository http://dl-cdn.alpinelinux.org/alpine/edge/community/ yarn \
 	# Clear apk's cache
-	&& apk-remove .build-dependencies \
-	&& apk-cleanup \
-    # Extra cleaning
-    && rm -rf /usr/include /node-v$NODE_VERSION* /usr/share/man  \
-    /root/.npm /root/.node-gyp /root/.gnupg \
-    /usr/lib/node_modules/npm/man /usr/lib/node_modules/npm/doc /usr/lib/node_modules/npm/html /usr/lib/node_modules/npm/scripts
-
-
-# Install yarn
-RUN \
-	# Print executed commands
-	set -x \
-    # Update repository indexes
-    && apk-update \
-    # Add packages
-    && apk-install --repository http://dl-cdn.alpinelinux.org/alpine/edge/community/ \
-        libstdc++ \
-    # Add temporary packages
-    && apk-install --repository http://dl-cdn.alpinelinux.org/alpine/edge/community/ --virtual .build-dependencies \
-        curl \
-        gnupg \
-        tar \
-    # Download and install
-    && curl -sfSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz" \
-    && mkdir -p /opt/yarn \
-    && tar -xzf yarn-v$YARN_VERSION.tar.gz -C /opt/yarn --strip-components=1 \
-    && ln -s /opt/yarn/bin/yarn /usr/local/bin/yarn \
-    && ln -s /opt/yarn/bin/yarn /usr/local/bin/yarnpkg \
-    # Remove files
-    && rm yarn-v$YARN_VERSION.tar.gz \
-	# Clear apk's cache
-	&& apk-remove .build-dependencies \
-	&& apk-cleanup \
-    # Extra cleaning
-    && rm -rf /usr/include /node-v$NODE_VERSION* /usr/share/man  \
-    /root/.npm /root/.node-gyp /root/.gnupg \
-    /usr/lib/node_modules/npm/man /usr/lib/node_modules/npm/doc /usr/lib/node_modules/npm/html /usr/lib/node_modules/npm/scripts
+	&& apk-cleanup
 
 # Copy scripts
 COPY ./rootfs /
