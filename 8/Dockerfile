@@ -31,10 +31,7 @@ RUN \
     # Install Yarn
     && apk-install --repository http://dl-cdn.alpinelinux.org/alpine/edge/community/ yarn \
 	# Clear apk's cache
-	&& apk-cleanup \
-    # Extra cleaning
-    && rm -rf /usr/include /node-v$NODE_VERSION* /usr/share/man  \
-    /root/.npm /root/.node-gyp /root/.gnupg
+	&& apk-cleanup
 
 # Copy scripts
 COPY /rootfs /
