@@ -25,8 +25,8 @@ RUN \
 	set -x \
     # Update repository indexes
     && apk-update \
-    # NodeJs need libuv >= 1.18.0
-    && apk-install --repository http://dl-cdn.alpinelinux.org/alpine/edge/main/ libuv \
+    # NodeJs need libuv >= 1.18.0 and http-parser
+    && apk-install --repository http://dl-cdn.alpinelinux.org/alpine/edge/main/ libuv http-parser \
     # Install NodeJs
     && apk-install --repository /tmp/nodejs --allow-untrusted nodejs nodejs-npm \
     # Install Yarn
