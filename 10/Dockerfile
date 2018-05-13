@@ -1,5 +1,5 @@
 # NodeJs apk builder
-FROM craftdock/apk-nodejs:9 as nodejs_apk_builder
+FROM craftdock/apk-nodejs:current as nodejs_apk_builder
 
 ENV PACKAGER "Hexosse <hexosse@gmail.com>"
 
