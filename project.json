@@ -4,27 +4,27 @@
   "versions": [
     {
       "version": "current",
-      "dockerfile": "10/Dockerfile",
-      "context": "10/.",
-      "data": "10.5.0"
+      "dockerfile": "11/Dockerfile",
+      "context": "11/.",
+      "data": "11.9.0"
     },
     {
       "version": "lts",
-      "dockerfile": "8/Dockerfile",
-      "context": "8/.",
-      "data": "8.11.3"
+      "dockerfile": "10/Dockerfile",
+      "context": "10/.",
+      "data": "10.15.1"
+    },
+    {
+      "version": "11",
+      "dockerfile": "11/Dockerfile",
+      "context": "11/.",
+      "data": "11.9.0"
     },
     {
       "version": "10",
       "dockerfile": "10/Dockerfile",
       "context": "10/.",
-      "data": "10.5.0"
-    },
-    {
-      "version": "8",
-      "dockerfile": "8/Dockerfile",
-      "context": "8/.",
-      "data": "8.11.3"
+      "data": "10.15.1"
     }
   ]
 }

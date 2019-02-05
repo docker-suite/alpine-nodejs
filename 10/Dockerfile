@@ -1,5 +1,5 @@
 # NodeJs apk builder
-FROM craftdock/apk-nodejs:current as nodejs_apk_builder
+FROM craftdock/apk-nodejs:lts as nodejs_apk_builder
 
 ENV PACKAGER "Hexosse <hexosse@gmail.com>"
 
@@ -19,7 +19,6 @@ LABEL maintainer="Hexosse <hexosse@gmail.com>" \
 
 COPY --from=nodejs_apk_builder /tmp/nodejs /tmp/nodejs
 
-# Install node
 RUN \
 	# Print executed commands
 	set -x \
@@ -35,4 +34,4 @@ RUN \
 	&& apk-cleanup
 
 # Copy scripts
-COPY ./rootfs /
+COPY /rootfs /
