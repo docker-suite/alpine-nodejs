@@ -17,6 +17,9 @@ FROM craftdock/alpine-runit:latest
 LABEL maintainer="Hexosse <hexosse@gmail.com>" \
       description="Minimal Alpine image with NodeJs and Yarn."
 
+ENV NODEJS_MAJOR 11
+ENV NODEJS_VERSION 11.10.0
+
 COPY --from=nodejs_apk_builder /tmp/nodejs /tmp/nodejs
 
 # Install node
@@ -28,7 +31,8 @@ RUN \
     # NodeJs need libuv >= 1.18.0 and http-parser
     && apk-install --repository http://dl-cdn.alpinelinux.org/alpine/edge/main/ libuv http-parser \
     # Install NodeJs
-    && apk-install --repository /tmp/nodejs --allow-untrusted nodejs nodejs-npm \
+    && apk-install --repository /tmp/nodejs --allow-untrusted nodejs \
+        nodejs-npm=${NODEJS_VERSION}-r0 \
     # Install Yarn
     && apk-install --repository http://dl-cdn.alpinelinux.org/alpine/edge/community/ yarn \
 	# Clear apk's cache
