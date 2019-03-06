@@ -18,7 +18,7 @@ LABEL maintainer="Hexosse <hexosse@gmail.com>" \
       description="Minimal Alpine image with NodeJs and Yarn."
 
 ENV NODEJS_MAJOR 10
-ENV NODEJS_VERSION 10.15.1
+ENV NODEJS_VERSION 10.15.3
 
 COPY --from=nodejs_apk_builder /tmp/nodejs /tmp/nodejs
 
@@ -30,7 +30,8 @@ RUN \
     # NodeJs need libuv >= 1.18.0 and http-parser
     && apk-install --repository http://dl-cdn.alpinelinux.org/alpine/edge/main/ libuv http-parser \
     # Install NodeJs
-    && apk-install --repository /tmp/nodejs --allow-untrusted nodejs \
+    && apk-install --repository /tmp/nodejs --allow-untrusted \
+        nodejs=${NODEJS_VERSION}-r0 \
         nodejs-npm=${NODEJS_VERSION}-r0 \
     # Install Yarn
     && apk-install --repository http://dl-cdn.alpinelinux.org/alpine/edge/community/ yarn \
