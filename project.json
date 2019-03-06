@@ -6,7 +6,7 @@
       "version": "current",
       "dockerfile": "11/Dockerfile",
       "context": "11/.",
-      "data": "11.9.0"
+      "data": "11.11.0"
     },
     {
       "version": "lts",
@@ -18,7 +18,7 @@
       "version": "11",
       "dockerfile": "11/Dockerfile",
       "context": "11/.",
-      "data": "11.9.0"
+      "data": "11.11.0"
     },
     {
       "version": "10",
