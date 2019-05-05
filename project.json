@@ -4,9 +4,9 @@
   "versions": [
     {
       "version": "current",
-      "dockerfile": "11/Dockerfile",
-      "context": "11/.",
-      "data": "11.11.0"
+      "dockerfile": "12/Dockerfile",
+      "context": "12/.",
+      "data": "12.1.0"
     },
     {
       "version": "lts",
@@ -15,10 +15,10 @@
       "data": "10.15.3"
     },
     {
-      "version": "11",
-      "dockerfile": "11/Dockerfile",
-      "context": "11/.",
-      "data": "11.11.0"
+      "version": "12",
+      "dockerfile": "12/Dockerfile",
+      "context": "12/.",
+      "data": "12.1.0"
     },
     {
       "version": "10",

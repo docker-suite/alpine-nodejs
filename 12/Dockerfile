@@ -17,8 +17,8 @@ FROM craftdock/alpine-runit:latest
 LABEL maintainer="Hexosse <hexosse@gmail.com>" \
       description="Minimal Alpine image with NodeJs and Yarn."
 
-ENV NODEJS_MAJOR 11
-ENV NODEJS_VERSION 11.11.0
+ENV NODEJS_MAJOR 12
+ENV NODEJS_VERSION 12.1.0
 
 COPY --from=nodejs_apk_builder /tmp/nodejs /tmp/nodejs
 
