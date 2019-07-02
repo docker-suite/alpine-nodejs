@@ -1,0 +1,47 @@
+FROM node:10-alpine
+
+LABEL maintainer="Hexosse <hexosse@gmail.com>" \
+      description="Minimal Alpine image with NodeJs, npm, Yarn and runit process supervisor." \
+      vendor="docker-suite" \
+      license="MIT"
+
+
+## Install runit process supervisor
+RUN \
+	# Print executed commands
+	set -x \
+    # Update repository indexes
+    && apk update \
+    # Download the install script and run it
+    && apk add curl \
+    && curl -s -o /tmp/install-runit.sh https://raw.githubusercontent.com/docker-suite/Install-Scripts/master/alpine-runit/install-runit.sh \
+    && sh /tmp/install-runit.sh \
+    # remove default entrypoint provided by node image
+    && rm -f /usr/local/bin/docker-entrypoint.sh \
+	# Clear apk's cache
+	&& apk-cleanup
+
+
+## Update npm to the latest version
+RUN \
+	# Print executed commands
+	set -x \
+    # Update repository indexes
+    && apk update \
+    # Update npm
+    && npm install -g npm \
+	# Clear apk's cache
+	&& apk-cleanup
+
+
+## Copy scripts and make it executable
+COPY /rootfs /
+RUN chmod +x /etc/entrypoint.d/*.sh
+
+
+## Entrypoint
+ENTRYPOINT ["/entrypoint.sh"]
+
+
+## Start runit
+CMD ["start"]

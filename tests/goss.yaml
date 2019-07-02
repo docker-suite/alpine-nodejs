@@ -1,0 +1,32 @@
+
+command:
+  node-version:
+    exit-status: 0
+    exec: "node --version"
+    stdout:
+    {{if getEnv "NODE_VERSION" | eq "8"}}
+    - "v8."
+    {{else if getEnv "NODE_VERSION" | eq "10"}}
+    - "v10."
+    {{else if getEnv "NODE_VERSION" | eq "11"}}
+    - "v11."
+    {{else if getEnv "NODE_VERSION" | eq "12"}}
+    - "v12."
+    {{else}}
+    - ""
+    {{end}}
+
+group:
+  node :
+    exists: true
+    gid: 1000
+    skip: false
+
+user:
+  node :
+    exists: true
+    uid: 1000
+    gid: 1000
+    groups:
+    - node
+    skip: false

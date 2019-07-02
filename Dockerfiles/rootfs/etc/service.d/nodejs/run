@@ -4,11 +4,15 @@
 # set -u : Exit the script when using uninitialised variable.
 set -eu
 
+# Add libraries
+source /usr/local/lib/bash-logger.sh
+source /usr/local/lib/persist-env.sh
+
+#
+NOTICE "[NODEJS] -- Starting Service nodejs ..."
+
 # Redirect STDERR to STDOUT
 exec 2>&1
-
-# Make environnement variables accessibles
-[ -r /etc/envvars ] && . /etc/envvars
 
 # Let's go and start node
 exec su-exec node node
