@@ -28,8 +28,12 @@ RUN \
 	set -x \
     # Update repository indexes
     && apk update \
+    # Handle 'not get uid/gid' error
+    && npm config set unsafe-perm true \
     # Update npm
     && npm install -g npm \
+    # Handle 'not get uid/gid' error
+    && npm config set unsafe-perm false \
 	# Clear apk's cache
 	&& apk-cleanup
 
