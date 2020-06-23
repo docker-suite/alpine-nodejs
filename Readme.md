@@ -9,10 +9,5 @@
 Minimal [Alpine][alpine-runit] image with NodeJs, npm, Yarn and [runit][runit] process supervisor
 
 
-## ![](https://github.com/docker-suite/artwork/raw/master/various/pin/png/pin_16.png) Inspired by:
-- [nodejs/docker-node](https://github.com/nodejs/docker-node) : Official docker image from [nodejs](https://nodejs.org/)
-- [mhart/alpine-node](https://github.com/mhart/alpine-node) : Minimal Node.js Docker Images built on Alpine Linux
-
-
 [alpine-runit]: https://github.com/docker-suite/alpine-runit/
 [runit]: http://smarden.org/runit/
