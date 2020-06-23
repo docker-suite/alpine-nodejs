@@ -15,6 +15,9 @@ LABEL maintainer="Hexosse <hexosse@gmail.com>" \
 # Github token
 ARG GH_TOKEN
 
+ENV DST_USER=node \
+    DST_GROUP=node
+
 
 ## Install runit process supervisor
 RUN \
@@ -23,7 +26,8 @@ RUN \
     # Update repository indexes
     && apk update \
     # Download the install script and run it
-    && apk add curl \
+    && apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/community/ \
+        curl \
     && curl -s -o /tmp/install-runit.sh https://raw.githubusercontent.com/docker-suite/Install-Scripts/master/alpine-runit/install-runit.sh \
     && sh /tmp/install-runit.sh \
     # remove default entrypoint provided by node image
@@ -37,7 +41,7 @@ RUN \
 	# Print executed commands
 	set -x \
     # Update repository indexes
-    && apk update \
+    && apk-update \
     # Handle 'not get uid/gid' error
     && npm config set unsafe-perm true \
     # Update npm
@@ -55,7 +59,3 @@ RUN chmod +x /etc/entrypoint.d/*.sh
 
 ## Entrypoint
 ENTRYPOINT ["/entrypoint.sh"]
-
-
-## Start runit
-CMD ["start"]

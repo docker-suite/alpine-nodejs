@@ -12,6 +12,8 @@ command:
     - "v11."
     {{else if getEnv "NODE_VERSION" | eq "12"}}
     - "v12."
+    {{else if getEnv "NODE_VERSION" | eq "14"}}
+    - "v14."
     {{else}}
     - ""
     {{end}}
