@@ -7,6 +7,5 @@ services:
         command: ["node", "app.js"]
         ports:
             - 3000:3000
-        working_dir: /app
         volumes:
             - ./app:/app:ro

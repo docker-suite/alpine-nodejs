@@ -57,5 +57,8 @@ COPY /rootfs /
 RUN chmod +x /etc/entrypoint.d/*.sh
 
 
+## Define a default working directory
+WORKDIR /app
+
 ## Entrypoint
 ENTRYPOINT ["/entrypoint.sh"]
