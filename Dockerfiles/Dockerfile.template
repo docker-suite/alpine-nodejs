@@ -1,22 +1,22 @@
 FROM node:{{NODE_VERSION}}-alpine
 
-LABEL maintainer="Hexosse <hexosse@gmail.com>" \
-    org.opencontainers.image.title="docker-suite dsuite/alpine-nodejs image" \
-    org.opencontainers.image.description="Minimal Alpine image with NodeJs, npm, Yarn and runit process supervisor" \
-    org.opencontainers.image.authors="Hexosse <hexosse@gmail.com>" \
-    org.opencontainers.image.vendor="docker-suite" \
-    org.opencontainers.image.licenses="MIT" \
-    org.opencontainers.image.url="https://github.com/docker-suite/alpine-nodejs" \
-    org.opencontainers.image.source="https://github.com/docker-suite/alpine-nodejs" \
-    org.opencontainers.image.documentation="https://github.com/docker-suite/alpine-nodejs/blob/master/Readme.md" \
-    org.opencontainers.image.created="{{DOCKER_IMAGE_CREATED}}" \
-    org.opencontainers.image.revision="{{DOCKER_IMAGE_REVISION}}"
+# LABEL maintainer="Hexosse <hexosse@gmail.com>" \
+#     org.opencontainers.image.title="docker-suite dsuite/alpine-nodejs image" \
+#     org.opencontainers.image.description="Minimal Alpine image with NodeJs, npm, Yarn and runit process supervisor" \
+#     org.opencontainers.image.authors="Hexosse <hexosse@gmail.com>" \
+#     org.opencontainers.image.vendor="docker-suite" \
+#     org.opencontainers.image.licenses="MIT" \
+#     org.opencontainers.image.url="https://github.com/docker-suite/alpine-nodejs" \
+#     org.opencontainers.image.source="https://github.com/docker-suite/alpine-nodejs" \
+#     org.opencontainers.image.documentation="https://github.com/docker-suite/alpine-nodejs/blob/master/Readme.md" \
+#     org.opencontainers.image.created="{{DOCKER_IMAGE_CREATED}}" \
+#     org.opencontainers.image.revision="{{DOCKER_IMAGE_REVISION}}"
 
 # Github token
 ARG GH_TOKEN
 
-ENV DST_USER=node \
-    DST_GROUP=node
+ENV NEW_USER=node \
+    NEW_GROUP=node
 
 
 ## Install runit process supervisor
@@ -28,37 +28,37 @@ RUN \
     # Download the install script and run it
     && apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/community/ \
         curl \
-    && curl -s -o /tmp/install-runit.sh https://raw.githubusercontent.com/docker-suite/Install-Scripts/master/alpine-runit/install-runit.sh \
-    && sh /tmp/install-runit.sh \
+    && curl -s -o /tmp/install-base.sh https://raw.githubusercontent.com/docker-suite/Install-Scripts/master/alpine-base/install-base.sh \
+    && sh /tmp/install-base.sh \
     # remove default entrypoint provided by node image
     && rm -f /usr/local/bin/docker-entrypoint.sh \
 	# Clear apk's cache
 	&& apk-cleanup
 
 
-## Update npm to the latest version
-RUN \
-	# Print executed commands
-	set -x \
-    # Update repository indexes
-    && apk-update \
-    # Handle 'not get uid/gid' error
-    && npm config set unsafe-perm true \
-    # Update npm
-    && npm install -g npm \
-    # Handle 'not get uid/gid' error
-    && npm config set unsafe-perm false \
-	# Clear apk's cache
-	&& apk-cleanup
+# ## Update npm to the latest version
+# RUN \
+# 	# Print executed commands
+# 	set -x \
+#     # Update repository indexes
+#     && apk-update \
+#     # Handle 'not get uid/gid' error
+#     && npm config set unsafe-perm true \
+#     # Update npm
+#     && npm install -g npm \
+#     # Handle 'not get uid/gid' error
+#     && npm config set unsafe-perm false \
+# 	# Clear apk's cache
+# 	&& apk-cleanup
 
 
 ## Copy scripts and make it executable
 COPY /rootfs /
-RUN chmod +x /etc/entrypoint.d/*.sh
 
 
 ## Define a default working directory
 WORKDIR /app
+
 
 ## Entrypoint
 ENTRYPOINT ["/entrypoint.sh"]

@@ -6,8 +6,7 @@
 ![MicroBadger Size (tag)](https://img.shields.io/microbadger/image-size/dsuite/alpine-nodejs/latest.svg?style=flat-square)
 [![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg?style=flat-square)](https://opensource.org/licenses/MIT)
 
-Minimal [Alpine][alpine-runit] image with NodeJs, npm, Yarn and [runit][runit] process supervisor
+[Alpine][alpine-base] image with NodeJs, npm, Yarn.
 
 
-[alpine-runit]: https://github.com/docker-suite/alpine-runit/
-[runit]: http://smarden.org/runit/
+[alpine-base]: https://github.com/docker-suite/alpine-base/

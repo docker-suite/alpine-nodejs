@@ -7,9 +7,9 @@ DOCKER_IMAGE_REVISION=$(shell git rev-parse --short HEAD)
 DIR:=$(strip $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST)))))
 
 ## Define the latest version
-latest = 14
-lts=12
-current=14
+latest=15
+lts=14
+current=15
 
 ## Config
 .DEFAULT_GOAL := help
@@ -26,13 +26,11 @@ all: ## Build all supported versions
 	@$(MAKE) build v=12
 	@$(MAKE) build v=13
 	@$(MAKE) build v=14
+	@$(MAKE) build v=15
 
 build: ## Build ( usage : make build v=14 )
 	$(eval version := $(or $(v),$(latest)))
 	@docker run --rm \
-		-e http_proxy=${http_proxy} \
-		-e https_proxy=${https_proxy} \
-		-e no_proxy=${no_proxy} \
 		-e NODE_VERSION=$(version) \
 		-e DOCKER_IMAGE_CREATED=$(DOCKER_IMAGE_CREATED) \
 		-e DOCKER_IMAGE_REVISION=$(DOCKER_IMAGE_REVISION) \
@@ -40,9 +38,6 @@ build: ## Build ( usage : make build v=14 )
 		dsuite/alpine-data \
 		sh -c "templater Dockerfile.template > Dockerfile-$(version)"
 	@docker build --force-rm \
-		--build-arg http_proxy=${http_proxy} \
-		--build-arg https_proxy=${https_proxy} \
-		--build-arg no_proxy=${no_proxy} \
 		--build-arg GH_TOKEN=${GH_TOKEN} \
 		--file $(DIR)/Dockerfiles/Dockerfile-$(version) \
 		--tag $(DOCKER_IMAGE):$(version) \
@@ -53,11 +48,7 @@ build: ## Build ( usage : make build v=14 )
 
 test: ## Test ( usage : make test v=14 )
 	$(eval version := $(or $(v),$(latest)))
-	@$(MAKE) build v=$(version)
 	@docker run --rm -t \
-		-e http_proxy=${http_proxy} \
-		-e https_proxy=${https_proxy} \
-		-e no_proxy=${no_proxy} \
 		-v $(DIR)/tests:/goss \
 		-v /tmp:/tmp \
 		-v /var/run/docker.sock:/var/run/docker.sock \
@@ -66,7 +57,6 @@ test: ## Test ( usage : make test v=14 )
 
 push: ## Push ( usage : make push v=14 )
 	$(eval version := $(or $(v),$(latest)))
-	@$(MAKE) build v=$(version)
 	@docker push $(DOCKER_IMAGE):$(version)
 	@[ "$(version)" = "$(lts)" ] && docker push $(DOCKER_IMAGE):lts || true
 	@[ "$(version)" = "$(current)" ] && docker push $(DOCKER_IMAGE):current || true
@@ -74,11 +64,7 @@ push: ## Push ( usage : make push v=14 )
 
 shell: ## Run shell ( usage : make shell v=14 )
 	$(eval version := $(or $(v),$(latest)))
-	@$(MAKE) build v=$(version)
 	@docker run -it --rm \
-		-e http_proxy=${http_proxy} \
-		-e https_proxy=${https_proxy} \
-		-e no_proxy=${no_proxy} \
 		-e DEBUG_LEVEL=DEBUG \
 		$(DOCKER_IMAGE):$(version) \
 		bash
@@ -89,9 +75,6 @@ remove: ## Remove all generated images
 
 readme: ## Generate docker hub full description
 	@docker run -t --rm \
-		-e http_proxy=${http_proxy} \
-		-e https_proxy=${https_proxy} \
-		-e no_proxy=${no_proxy} \
 		-e DOCKER_USERNAME=${DOCKER_USERNAME} \
 		-e DOCKER_PASSWORD=${DOCKER_PASSWORD} \
 		-e DOCKER_IMAGE=${DOCKER_IMAGE} \
