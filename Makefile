@@ -7,9 +7,9 @@ DOCKER_IMAGE_REVISION=$(shell git rev-parse --short HEAD)
 DIR:=$(strip $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST)))))
 
 ## Define the latest version
-latest=15
+latest=16
 lts=14
-current=15
+current=16
 
 ## Config
 .DEFAULT_GOAL := help
@@ -19,13 +19,32 @@ help: ## This help!
 	@printf "\033[33mUsage:\033[0m\n  make [target] [arg=\"val\"...]\n\n\033[33mTargets:\033[0m\n"
 	@grep -E '^[-a-zA-Z0-9_\.\/]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[32m%-15s\033[0m %s\n", $$1, $$2}'
 
-all: ## Build all supported versions
+build-all: ## Build all supported versions
 	@$(MAKE) build v=10
 	@$(MAKE) build v=11
 	@$(MAKE) build v=12
 	@$(MAKE) build v=13
 	@$(MAKE) build v=14
 	@$(MAKE) build v=15
+	@$(MAKE) build v=16
+
+test-all: ## Build all supported versions
+	@$(MAKE) test v=10
+	@$(MAKE) test v=11
+	@$(MAKE) test v=12
+	@$(MAKE) test v=13
+	@$(MAKE) test v=14
+	@$(MAKE) test v=15
+	@$(MAKE) test v=16
+
+push-all: ## Push all supported versions
+	@$(MAKE) push v=10
+	@$(MAKE) push v=11
+	@$(MAKE) push v=12
+	@$(MAKE) push v=13
+	@$(MAKE) push v=14
+	@$(MAKE) push v=15
+	@$(MAKE) push v=16
 
 build: ## Build ( usage : make build v=14 )
 	$(eval version := $(or $(v),$(latest)))
@@ -47,12 +66,9 @@ build: ## Build ( usage : make build v=14 )
 
 test: ## Test ( usage : make test v=14 )
 	$(eval version := $(or $(v),$(latest)))
-	@docker run --rm -t \
-		-v $(DIR)/tests:/goss \
-		-v /tmp:/tmp \
-		-v /var/run/docker.sock:/var/run/docker.sock \
-		dsuite/goss:latest \
-		dgoss run --entrypoint=/goss/entrypoint.sh $(DOCKER_IMAGE):$(version)
+	@GOSS_FILES_PATH=$(DIR)/tests \
+	GOSS_SLEEP=0.5 \
+	 	dgoss run $(DOCKER_IMAGE):$(version)
 
 push: ## Push ( usage : make push v=14 )
 	$(eval version := $(or $(v),$(latest)))

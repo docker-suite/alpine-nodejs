@@ -15,11 +15,10 @@ LABEL maintainer="Hexosse <hexosse@gmail.com>" \
 # Github token
 ARG GH_TOKEN
 
-ENV NEW_USER=node \
-    NEW_GROUP=node
+# Node version
+ENV NODE_VERSION={{NODE_VERSION}}
 
-
-## Install runit process supervisor
+## Install alpine-base
 RUN \
 	# Print executed commands
 	set -x \
@@ -35,7 +34,6 @@ RUN \
 	# Clear apk's cache
 	&& apk-cleanup
 
-
 ## Update npm to the latest version
 RUN \
 	# Print executed commands
@@ -45,20 +43,22 @@ RUN \
     # Handle 'not get uid/gid' error
     && npm config set unsafe-perm true \
     # Update npm
+    && npm install -g agentkeepalive --save \
     && npm install -g npm \
     # Handle 'not get uid/gid' error
     && npm config set unsafe-perm false \
 	# Clear apk's cache
 	&& apk-cleanup
 
-
 ## Copy scripts and make it executable
 COPY /rootfs /
 
+# Make entrypoint script accessible and executable
+RUN chmod 0755 /entrypoint.sh \
+    && chmod 0755 /node-entrypoint.sh
 
 ## Define a default working directory
 WORKDIR /app
-
 
 ## Entrypoint
 ENTRYPOINT ["/entrypoint.sh"]

@@ -4,6 +4,7 @@ services:
 
     node:
         image: dsuite/alpine-nodejs:latest
+        container_name: node
         command: ["node", "app.js"]
         ports:
             - 3000:3000
