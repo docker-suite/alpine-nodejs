@@ -25,9 +25,8 @@ RUN \
     # Update repository indexes
     && apk update \
     # Download the install script and run it
-    && apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/community/ \
-        curl \
-    && curl -s -o /tmp/install-base.sh https://raw.githubusercontent.com/docker-suite/Install-Scripts/master/alpine-base/install-base.sh \
+    && apk add --no-cache curl \
+    && curl -s -o /tmp/install-base.sh https://raw.githubusercontent.com/craftdock/Install-Scripts/master/alpine-base/install-base.sh \
     && sh /tmp/install-base.sh \
     # remove default entrypoint provided by node image
     && rm -f /usr/local/bin/docker-entrypoint.sh \
@@ -51,7 +50,7 @@ RUN \
 	&& apk-cleanup
 
 ## Copy scripts and make it executable
-COPY /rootfs /
+COPY rootfs /
 
 # Make entrypoint script accessible and executable
 RUN chmod 0755 /entrypoint.sh \
